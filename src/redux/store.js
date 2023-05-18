@@ -3,7 +3,8 @@ import userReducer from './userDuck'
 import thunk from 'redux-thunk'
 
 let rootReducer = combineReducers({
-    user: userReducer
+    user: userReducer,
+    characters: useCharacter
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
