@@ -15,11 +15,11 @@ let GET_CHAR_ERROR = "GET_CHAR_ERROR"
 export default function reducer(state = initialData, action) {
     switch (action.type) {
         case GET_CHAR:
-            return {}
+            return {...state, fetching: true}
         case GET_CHAR_SUCCESS:
-            return {...state, array: action.payload}
+            return {...state, array: action.payload, fetching: false}
         case GET_CHAR_ERROR:
-            return {}
+            return {...state, fetching: false, error: action.payload}
         default:
             return state
     }
@@ -29,11 +29,20 @@ export default function reducer(state = initialData, action) {
 // la api trae los personajes en una llave "results", y axios te trae eso en la llave "data"
 export function getCharactersAction() {
     return (dispatch, getState) => {
+        dispatch({
+            type: GET_CHAR
+        })
         axios.get(URL)
             .then(res => {
                 dispatch({
                     type: GET_CHAR_SUCCESS,
                     payload: res.data.results
+                })
+            })
+            .catch(error => {
+                dispatch({
+                    type: GET_CHAR_ERROR,
+                    payload: error.response.message
                 })
             })
     }
