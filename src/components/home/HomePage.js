@@ -2,14 +2,22 @@ import React, { useState, useEffect } from 'react'
 import Card from '../card/Card'
 import styles from './home.module.css'
 import { connect } from 'react-redux'
+import { removeCharacterAction } from '../../redux/charsDuck'
 
-function Home({ chars }) {
+function Home({ chars, removeCharacterAction }) {
 
     function renderCharacter() {
         let char = chars[0]
         return (
-            <Card {...char}/>
+            <Card 
+                leftClick={nextCharacter} 
+                {...char}
+            />
         )
+    }
+
+    function nextCharacter() {
+        removeCharacterAction()
     }
 
     return (
@@ -29,4 +37,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(Home)
+export default connect(mapStateToProps, {removeCharacterAction})(Home)
