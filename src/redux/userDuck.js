@@ -54,3 +54,14 @@ export let doGoogleLoginAction = () => async (dispatch, getState) => {
         })
     }
 }
+
+export let restoreSessionAction = () => (dispatch) => {
+    let userSession = localStorage.getItem('storage')
+    userSession = JSON.parse(userSession)
+    if(userSession && userSession.user) {
+        dispatch({
+            type: LOGIN_SUCCESS,
+            payload: userSession.user
+        })
+    }
+}
