@@ -19,3 +19,6 @@ export function loginWithGoogle() {
         .then(snapshot => snapshot.user)
 }
 
+export function signOutGoogle() {
+    firebase.auth().signOut()
+}
