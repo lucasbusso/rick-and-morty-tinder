@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { updateDB } from '../firebase'
+import { updateDB, getFavs } from '../firebase'
 
 //constants
 let initialData = {
@@ -9,11 +9,18 @@ let initialData = {
     favorites: []
 }
 let URL = "https://rickandmortyapi.com/api/character"
+
 let GET_CHAR = "GET_CHAR"
 let GET_CHAR_SUCCESS = "GET_CHAR_SUCCESS"
 let GET_CHAR_ERROR = "GET_CHAR_ERROR"
+
 let REMOVE_CHARACTER = "REMOVE_CHARACTER"
+
 let ADD_TO_FAVS = "ADD_TO_FAVS"
+
+let GET_FAVS = "GET_FAVS"
+let GET_FAVS_SUCCESS = "GET_FAVS_SUCCESS"
+let GET_FAVS_ERROR = "GET_FAVS_ERROR"
 
 //reducer
 export default function reducer(state = initialData, action) {
@@ -28,6 +35,12 @@ export default function reducer(state = initialData, action) {
             return {...state, array: action.payload}
         case ADD_TO_FAVS:
             return {...state, ...action.payload}
+        case GET_FAVS:
+            return {...state, fetching: true}
+        case GET_FAVS_SUCCESS:
+            return {...state, fetching: false, favorites: action.payload}
+        case GET_FAVS_ERROR:
+            return {...state, fetching: false, payload: action.payload}
         default:
             return state
     }
@@ -58,6 +71,27 @@ export function getCharactersAction() {
 }
 
 // hecha con arrow function
+export let retrieveFavs = () => (dispatch, getState) => {
+    dispatch({
+        type: GET_FAVS
+    })
+    let { uid } = getState().user
+    return getFavs(uid)
+        .then(array => {
+            dispatch({
+                type: GET_FAVS_SUCCESS,
+                payload: [...array]
+            })
+        })
+        .catch(error => {
+            console.log(error)
+            dispatch({
+                type: GET_FAVS_ERROR,
+                payload: error.message
+            })
+        })
+}
+
 export let addToFavoritesAction = () => (dispatch, getState) => {
     let {array, favorites} = getState().characters
     let {uid} = getState().user

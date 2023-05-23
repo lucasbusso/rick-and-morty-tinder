@@ -19,6 +19,13 @@ export function updateDB(array, uid) {
     return db.doc(uid).set({array}) // a set() siempre se le pasa un objeto
 }
 
+export function getFavs(uid) {
+    return db.doc(uid).get()
+        .then(snap => {
+            return snap.data().array
+        })
+}
+
 export function loginWithGoogle() {
     let provider = new firebase.auth.GoogleAuthProvider()
     return firebase.auth().signInWithPopup(provider)
